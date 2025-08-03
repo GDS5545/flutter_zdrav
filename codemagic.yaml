@@ -1,13 +1,26 @@
-
 workflows:
   flutter-app:
     name: Flutter WebView App Build
+    max_build_duration: 60
     environment:
       flutter: stable
+      xcode: latest
+      vars:
+        BUNDLE_ID: "com.example.flutterWebViewApp"  # замени на свой ID
     scripts:
-      - flutter pub get
-      - flutter build apk --release
-      - flutter build ios --release
+      - name: Install dependencies
+        script: |
+          flutter pub get
+
+      - name: Build Android
+        script: |
+          flutter build apk --release
+
+      - name: Build iOS (simulator only or with code-signing later)
+        script: |
+          flutter build ios --release --no-codesign
+
     artifacts:
       - build/app/outputs/flutter-apk/app-release.apk
       - build/ios/ipa/*.ipa
+      - build/macos/Build/Products/Release/*.app
